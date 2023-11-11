@@ -1,5 +1,7 @@
 import express,{Request,Response} from "express";
-import Customer from "./modelCust";
+import Customer, { CustomerModel } from "./modelCust";
+import jwt from 'jsonwebtoken'
+import CONFIDENCE from "../../../config/config";
 export const router = express();
 
 
@@ -26,9 +28,15 @@ export const signIn = async (req:Request,res:Response)=>{
     if(!customerExist)return res.status(400).json({msg:'El Usuario no existe'})
     const isMatch = await customerExist.comparedPass(req.body.password)
     if(isMatch){
-        return res.status(200).json({/*token : createToken(UserExist)*/ msg:'bienvenido'})
+        return res.status(200).json({token : createToken(customerExist)})
     }
     return res.status(400).json({msg: 'El email o la contraseña son incorectas'})
+};
+
+//creacion del token
+function createToken(user: CustomerModel): string {
+    return jwt.sign({ id: user.id, email: user.email }, `${CONFIDENCE.SECRETDB}`);
+    expiresIn : '24h'
 };
 
 //metodo para imprimir todos los clientes

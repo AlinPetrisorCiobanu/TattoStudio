@@ -1,3 +1,4 @@
+import CONFIDENCE from "../../../config/config";
 import {model,Schema,Document} from "../../../database";
 import bcrypt from 'bcrypt'
 export interface CustomerModel extends Document {
@@ -47,7 +48,7 @@ export const customerSchema = new Schema({
 customerSchema.pre<CustomerModel>('save',async function (next) {
     const custom = this;
         if(!custom.isModified('password'))return next();
-       const hash = await bcrypt.hash(custom.password,10);
+       const hash = await bcrypt.hash(custom.password, CONFIDENCE.LOOPDB);
        custom.password = hash;
        next();
 });

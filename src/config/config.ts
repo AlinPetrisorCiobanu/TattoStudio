@@ -4,8 +4,8 @@ const CONFIDENCE  = {
     URLDB: process.env.DDBB_URL,
     USERDB: process.env.DDBB_USER,
     PASSWORDDB: process.env.DDBB_PASSWORD,
-    LOOPDB: process.env.BCRYTP_LOOP,
+    LOOPDB: Number(process.env.BCRYTP_LOOP),
     SECRETDB: process.env.JWT_SECRET,
-    PORTDB: process.env.JWT_PORT,
+    PORTDB: Number(process.env.JWT_PORT),
   };
   export default CONFIDENCE;
