@@ -42,6 +42,10 @@ export const customerSchema = new Schema({
         require:true,
         minlength: 2,
         maxlength: 30
+    },
+    borradoLogico:{
+        type:Boolean,
+        default : false
     }
 },{versionkey:true,timestamps:true});
 

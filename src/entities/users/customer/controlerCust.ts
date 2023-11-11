@@ -4,8 +4,6 @@ import jwt from 'jsonwebtoken'
 import CONFIDENCE from "../../../config/config";
 export const router = express();
 
-
-
 //metodo para introducir nuevo cliente
 export const signUp = async (req:Request,res:Response) =>{
     if (!req.body.name || !req.body.lastName) return res.status(400).json({ msg: 'Por favor introduce tu nombre y apellidos' });
@@ -39,10 +37,52 @@ function createToken(user: CustomerModel): string {
     expiresIn : '24h'
 };
 
-//metodo para imprimir todos los clientes
-export const customers = async (req:Request,res:Response) =>{
+//metodo para modificar al cliente seleccionado
+export const modifyCustom = async (req:Request,res:Response) =>{
+    if(!req.body.id)return res.status(400).json({msg:'por favor introduce un id de usuario'})
     const customerId = await Customer.findById(req.body.id)
-    return res.status(201).json(customerId);
-    // const allCustomers = await customer.find({});
-    // return res.status(200).json(allCustomers);
+    if(!customerId)return res.status(404).json({msg:'Usuario no encontrado'})
+        if(req.body.name === ""||req.body.lastname === ""||req.body.idCustomer === ""||req.body.birthday === "")return res.status(411).json({msg:'!!!campos!!! sin rellenar'})
+    const birthday = req.body.birthday  
+    if(req.body.birthday && typeof( birthday)  != "number")return res.status(411).json({msg:'!!!La fecha de nacimiento es un numero!!! '})
+    try {
+        const updatedCustomer = await Customer.findByIdAndUpdate(req.body.id, { name: req.body.name,lastName: req.body.lastName,idCustomer: req.body.idCustomer,birthday: req.body.birthday }, { new: true });
+        return res.status(200).json(updatedCustomer);
+    } catch (error) {
+        return res.status(500).json({ msg: 'Error al modificar el usuario' });
+    }
+}
+
+//metodo para borrar al cliente seleccionado
+export const deleteCustom = async (req:Request,res:Response) =>{
+    const customerId = await Customer.findById(req.body.id)
+    if(!customerId) return res.status(404).json({msg: 'usuario no encontrado'})
+   try {
+        const updatedCustomer = await Customer.findByIdAndUpdate(req.body.id, { borradoLogico: true}, { new: true });
+        return res.status(200).json(updatedCustomer);
+   } catch (error) {
+        return res.status(500).json({msg:'internal server error '+error})
+   }
+   return
+}
+
+//metodo para reactivar cliente
+export const activateCustom = async (req:Request,res:Response) =>{
+    const customerId = await Customer.findById(req.body.id)
+    if(!customerId) return res.status(404).json({msg: 'usuario no encontrado'})
+   try {
+        const updatedCustomer = await Customer.findByIdAndUpdate(req.body.id, { borradoLogico: false}, { new: true });
+        return res.status(200).json(updatedCustomer);
+   } catch (error) {
+        return res.status(500).json({msg:'internal server error '+error})
+   }
+   return
+}
+
+
+//metodo para imprimir todos los customers
+export const getAll = async (_req:Request,res:Response) =>{
+
+    const allCustomers = await Customer.find({});
+    return res.status(200).json(allCustomers);
 }
