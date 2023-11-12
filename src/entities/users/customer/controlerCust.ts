@@ -32,8 +32,8 @@ export const signIn = async (req:Request,res:Response)=>{
 };
 
 //creacion del token
-function createToken(user: CustomerModel): string {
-    return jwt.sign({ id: user.id, email: user.email }, `${CONFIDENCE.SECRETDB}`);
+function createToken(custom: CustomerModel): string {
+    return jwt.sign({ id: custom.id, email: custom.email }, `${CONFIDENCE.SECRETDB}`);
     expiresIn : '24h'
 };
 
@@ -63,7 +63,6 @@ export const deleteCustom = async (req:Request,res:Response) =>{
    } catch (error) {
         return res.status(500).json({msg:'internal server error '+error})
    }
-   return
 }
 
 //metodo para reactivar cliente
@@ -76,7 +75,6 @@ export const activateCustom = async (req:Request,res:Response) =>{
    } catch (error) {
         return res.status(500).json({msg:'internal server error '+error})
    }
-   return
 }
 
 
