@@ -1,15 +1,17 @@
-import CONFIDENCE from "../../../config/config";
-import {model,Schema,Document} from "../../../database";
+import CONFIDENCE from "../../config/config";
+import {model,Schema,Document} from "../../database";
 import bcrypt from 'bcrypt'
-export interface CustomerModel extends Document {
+export interface UserModel extends Document {
     name : string , 
     lastName : string ,
-    idPers : string,
+    idUser : string,
+    birthday : number,
     email : string,
     password : string ,
-    comparedPass:(candidatePassword: string)=>Promise<Boolean> 
+    comparedPass:(candidatePassword: string)=>Promise<Boolean>,
+    rol:string
 }
-export const customerSchema = new Schema({
+export const userSchema = new Schema({
     name : {
         type : String,
         require : true,
@@ -22,7 +24,7 @@ export const customerSchema = new Schema({
         minlength: 2,
         maxlength: 30
         },
-    idCustomer: {
+    idUser: {
         type : String,
         require : true,
         unique : true
@@ -46,20 +48,24 @@ export const customerSchema = new Schema({
     borradoLogico:{
         type:Boolean,
         default : false
+    },
+    rol:{
+        type:String,
+        default : "customer"
     }
 },{versionkey:true,timestamps:true});
 
-customerSchema.pre<CustomerModel>('save',async function (next) {
+userSchema.pre<UserModel>('save',async function (next) {
     const custom = this;
         if(!custom.isModified('password'))return next();
        const hash = await bcrypt.hash(custom.password, CONFIDENCE.LOOPDB);
        custom.password = hash;
        next();
 });
-customerSchema.methods.comparedPass = async function (password:string):Promise<Boolean> {
+userSchema.methods.comparedPass = async function (password:string):Promise<Boolean> {
   return await bcrypt.compare(password, this.password)
 }
 
-const Customer = model<CustomerModel>('Customer',customerSchema);
+const User = model<UserModel>('Users',userSchema);
 
-export default Customer;
+export default User;

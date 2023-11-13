@@ -1,0 +1,49 @@
+● Registro de usuarios.  Validar
+● Login de usuarios.    Validar
+● Perfil de usuario.    Validar
+● Modificación de datos del perfil. Validar
+
+● Creación de citas.
+● Editar citas.
+● Eliminación de citas
+
+● Ver todas las citas que tengo como cliente (solo las propias).
+● Ver todas las citas existentes conmigo (role tatuador).
+● Listar tatuadores
+
+● Ver todos los clientes registrados (super admin) (EXTRA)
+● Crear tatuadores (superadmin) (EXTRA)
+● Ver todos los clientes registrados (super admin) (EXTRA)
+● Eliminar usuario del sistema(super admin ) (EXTRA)
+● Ver una cita en detalle (EXTRA).
+● El super_admin debe otorgar roles a los usuarios del sistema(EXTRA)
+● Validar la fecha de la cita(EXTRA)
+● Añadir tipos de intervención (tattoo / piercing ) a las citas (EXTRA)
+
+
+corsOption = {
+    origin: '*',
+    methods : 'GET,POST,PUT,PULL,DELETE',
+    preflightContinure : false,
+    optionSuccesStatus : 204,
+    allowedHeaders : ''
+}
+
+
+const crearUsu = async (user)=>{
+    if(!user) return false
+    user.password = await bcrypt.hash(user.password,4)
+    User.create(user)
+}
+
+router 
+
+routerCustomers.post('/', async (req,res,next)=>{
+    try{
+        res.json(await signUp(req.body))
+    }
+    catch(e){
+        next(e)
+    }
+    
+}
