@@ -10,6 +10,7 @@ export interface UserModel extends Document {
     email : string,
     password : string ,
     comparedPass:(candidatePassword: string)=>Promise<Boolean>,
+    borradoLogico:boolean,
     rol:string
 }
 export const userSchema = new Schema({

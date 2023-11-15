@@ -2,9 +2,10 @@ import express from "express";
 import {signUp,signIn,modifyCustom,deleteCustom,activateCustom,getAll} from "./controler";
 import { validateToken } from "../../middleware/authorization";
 
+
 const router = express.Router()
 
-router.post('/', async (req,res,next)=>{
+router.post('/',async (req,res,next)=>{
     try{
         res.json(await signUp(req.body))
     }
@@ -13,6 +14,15 @@ router.post('/', async (req,res,next)=>{
     }
     return signUp
 })
+// router.post('/admin', validateToken ,async (req,res,next)=>{
+//     try{
+//         res.json(await signUp(req.body , req.user!))
+//     }
+//     catch(e){
+//         next(e)
+//     }
+//     return signUp
+// })
 
 router.post('/login', async (req,res,next)=>{
     try{
