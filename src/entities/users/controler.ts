@@ -65,7 +65,6 @@ export const activateCustom = async (user:UserModel) =>{
 
 //metodo para imprimir todos los customers
 export const getAll = async () =>{
-
     const allCustomers = await Customer.find({});
     return allCustomers
 }

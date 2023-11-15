@@ -13,37 +13,15 @@
 
 ● Ver todos los clientes registrados (super admin) (EXTRA)
 ● Crear tatuadores (superadmin) (EXTRA)
-● Ver todos los clientes registrados (super admin) (EXTRA)
 ● Eliminar usuario del sistema(super admin ) (EXTRA)
 ● Ver una cita en detalle (EXTRA).
 ● El super_admin debe otorgar roles a los usuarios del sistema(EXTRA)
 ● Validar la fecha de la cita(EXTRA)
 ● Añadir tipos de intervención (tattoo / piercing ) a las citas (EXTRA)
 
+date.now()
+new date()
 
-corsOption = {
-    origin: '*',
-    methods : 'GET,POST,PUT,PULL,DELETE',
-    preflightContinure : false,
-    optionSuccesStatus : 204,
-    allowedHeaders : ''
-}
+min: {new Date()}
 
-
-const crearUsu = async (user)=>{
-    if(!user) return false
-    user.password = await bcrypt.hash(user.password,4)
-    User.create(user)
-}
-
-router 
-
-routerCustomers.post('/', async (req,res,next)=>{
-    try{
-        res.json(await signUp(req.body))
-    }
-    catch(e){
-        next(e)
-    }
-    
-}
+return handleBadRequest(res)

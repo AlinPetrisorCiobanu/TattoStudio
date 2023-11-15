@@ -51,7 +51,7 @@ export const userSchema = new Schema({
     },
     rol:{
         type:String,
-        default : "customer"
+        enum : ["customer","artist","admin"]
     }
 },{versionkey:true,timestamps:true});
 
