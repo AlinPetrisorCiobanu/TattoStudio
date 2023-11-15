@@ -2,6 +2,7 @@ import CONFIDENCE from "../../config/config";
 import {model,Schema,Document} from "../../database";
 import bcrypt from 'bcrypt'
 export interface UserModel extends Document {
+    id : any,
     name : string , 
     lastName : string ,
     idUser : string,
@@ -51,6 +52,7 @@ export const userSchema = new Schema({
     },
     rol:{
         type:String,
+        default : "customer",
         enum : ["customer","artist","admin"]
     }
 },{versionkey:true,timestamps:true});

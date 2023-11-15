@@ -1,23 +1,23 @@
 import jwt from "jsonwebtoken";
 import CONFIDENCE from "../config/config";
 import {Request, Response, NextFunction } from "express";
-const authMiddleware = (req:Request,res : Response , next : NextFunction) => {
+import { JwtPayload } from "../types/types";
+
+const validateToken = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header("Authorization");
     if (!token) {
-      throw res.status(404).json({msg:'UNHAUTORIZED'})
+      return res.status(404).json({ msg: 'UNAUTHORIZED' });
     }
     const t = token.split(" ")[1];
-    const decoded = jwt.verify(t, CONFIDENCE.SECRETDB);
-    req.user = decoded;
+    req.user = jwt.verify(t, CONFIDENCE.SECRETDB) as JwtPayload
     next();
   } catch (error) {
-    if (error === "JsonWebTokenError") {
-      const error = new Error("JsonWebTokenError");
-      (error as any).status = 401;
-      throw error;
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({ error: "Invalid token" });
     }
     next(error);
   }
+  return
 };
-export { authMiddleware };
+export { validateToken };

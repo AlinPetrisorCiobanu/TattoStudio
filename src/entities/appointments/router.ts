@@ -1,6 +1,6 @@
 import express from "express";
 import {getAll,create,modifyAppoints,deleteAppoints} from "./controler";
-import { authMiddleware } from "../../middleware/authorization";
+// import { validateToken } from "../../middleware/authorization";
 
 const router = express.Router()
 router.post('/', async (req,res,next)=>{
@@ -12,7 +12,7 @@ router.post('/', async (req,res,next)=>{
     }
     return create
 })
-router.put('/', authMiddleware ,async (req,res,next)=>{
+router.put('/', async (req,res,next)=>{
     try{
         res.json(await modifyAppoints(req.body))
     }
@@ -21,7 +21,7 @@ router.put('/', authMiddleware ,async (req,res,next)=>{
     }
     return modifyAppoints
 })
-router.delete('/', authMiddleware , async (req,res,next)=>{
+router.delete('/',  async (req,res,next)=>{
     try{
         res.json(await deleteAppoints(req.body))
     }
@@ -30,7 +30,7 @@ router.delete('/', authMiddleware , async (req,res,next)=>{
     }
     return deleteAppoints
 })
-router.get('/', authMiddleware , async (_req,res,next)=>{
+router.get('/',  async (_req,res,next)=>{
     try{
         res.json(await getAll())
     }

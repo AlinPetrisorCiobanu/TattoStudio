@@ -24,4 +24,3 @@ new date()
 
 min: {new Date()}
 
-return handleBadRequest(res)

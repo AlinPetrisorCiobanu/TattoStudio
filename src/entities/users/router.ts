@@ -1,6 +1,6 @@
 import express from "express";
 import {signUp,signIn,modifyCustom,deleteCustom,activateCustom,getAll} from "./controler";
-import { authMiddleware } from "../../middleware/authorization";
+import { validateToken } from "../../middleware/authorization";
 
 const router = express.Router()
 
@@ -13,6 +13,7 @@ router.post('/', async (req,res,next)=>{
     }
     return signUp
 })
+
 router.post('/login', async (req,res,next)=>{
     try{
         res.json(await signIn(req.body))
@@ -22,40 +23,45 @@ router.post('/login', async (req,res,next)=>{
     }
     return signIn
 })
-router.put('/', authMiddleware ,async (req,res,next)=>{
+
+router.put('/:id?', validateToken ,async (req,res,next)=>{
     try{
-        res.json(await modifyCustom(req.body))
+        res.json(await modifyCustom(req.user! , req.params.id , req.body))
     }
     catch(e){
         next(e)
     }
     return modifyCustom
 })
-router.delete('/', authMiddleware , async (req,res,next)=>{
+
+router.delete('/', validateToken , async (req,res,next)=>{
     try{
-        res.json(await deleteCustom(req.body))
+        res.json(await deleteCustom(req.user!))
     }
     catch(e){
         next(e)
     }
     return deleteCustom
 })
-router.patch('/', authMiddleware , async (req,res,next)=>{
+
+router.patch('/:id', validateToken , async (req,res,next)=>{
     try{
-        res.json(await activateCustom(req.body))
+        res.json(await activateCustom(req.user! , req.params.id))
     }
     catch(e){
         next(e)
     }
     return activateCustom
 })
-router.get('/', authMiddleware , async (_req,res,next)=>{
+
+router.get('/', validateToken , async (req,res,next)=>{
     try{
-        res.json(await getAll())
+        res.json(await getAll(req.user!))
     }
     catch(e){
         next(e)
     }
-    return activateCustom
+    return getAll
 })
+
 export {router};
