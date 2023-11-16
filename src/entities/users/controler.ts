@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import CONFIDENCE from "../../config/config";
 import bcrypt from "bcrypt"
 import { JwtPayload } from "../../types/types";
+import { validateName,validateLastName, validateIdUser, validatePhoneNumber, validateBithday, validateEmail, validatePassword } from "../../utils/validator";
 
 //creacion del token
 function createToken(user: UserModel){
@@ -12,9 +13,21 @@ function createToken(user: UserModel){
 
 //metodo para introducir nuevo usuario
 export const signUp = async (user:UserModel) =>{
+    if(!user.name||!user.lastName||!user.idUser||!user.tlf||!user.birthday||!user.email||!user.password)return "debe introducir todos los campos"
+    if(!validateName(user.name)) return "el nombre no esta bien"
+    if(!validateLastName(user.lastName)) return "los apellidos no estan bien"
+    if(!validateIdUser(user.idUser)) return "el DNI no esta bien"
+    const number = user.tlf.toString()
+    if(!validatePhoneNumber(number)) return "el numero de telefono esta mal"
+    const dateNow = new Date()
+    if((dateNow.getFullYear()-user.birthday)<18) return "lo siento tienes que ser mayor de edad!"
+    const birth = user.birthday.toString()
+    if(!validateBithday(birth)) return "la fecha de nacimiento esta mal!"
+    if(!validateEmail(user.email)) return "el email esta mal"
+    if(!validatePassword(user.password)) return "la contraseña esta mal!"
         const newUser = new User(user);
-        const usuarioExistente = await User.find({email:user.email , idUser: user.idUser})
-        if(usuarioExistente) return "lo siento el usuario ya existe"
+        const usuarioExistente = await User.find({email:user.email /*, idUser: user.idUser*/})
+        if(usuarioExistente[0]) return "lo siento el usuario ya existe"
         user.password = await bcrypt.hash(user.password,CONFIDENCE.LOOPDB)
         try{
             if(user.rol==="admin") return "lo siento no puedes elegir admin!"
@@ -48,6 +61,7 @@ export const modifyCustom = async (user:JwtPayload , id:string , datosUsuario : 
             const updatedUser = await User.findByIdAndUpdate(id, {  name:datosUsuario.name,
                                                                     lastName: datosUsuario.lastName,
                                                                     idUser: datosUsuario.idUser,
+                                                                    tlf: datosUsuario.tlf,
                                                                     birthday: datosUsuario.birthday,
                                                                     email: datosUsuario.email,
                                                                     password: pass,
@@ -62,11 +76,14 @@ export const modifyCustom = async (user:JwtPayload , id:string , datosUsuario : 
         const userId = await User.findById(user.id)
         if(!userId)return console.log('datos no encontrado')
         try {
-            const pass = await bcrypt.hash(datosUsuario.password,CONFIDENCE.LOOPDB)
+            if(!validateName(datosUsuario.name)) return "el nombre esta mal!"
+            if(!validateLastName(datosUsuario.lastName)) return "el apellido esta mal!"
+            if(!validatePassword(datosUsuario.password)) return "la contraseña esta mal!"
+            const pass = await bcrypt.hash( datosUsuario.password,CONFIDENCE.LOOPDB)
             const updatedUser = await User.findByIdAndUpdate(user.id, { name: datosUsuario.name,
-                                                                            lastName: datosUsuario.lastName,
-                                                                            password: pass
-                                                                          }, { new: true });
+                                                                        lastName: datosUsuario.lastName,
+                                                                        password: pass
+                                                                      }, { new: true });
             return updatedUser
         } catch (error) {
             return error

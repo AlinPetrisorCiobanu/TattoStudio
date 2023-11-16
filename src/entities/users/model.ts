@@ -6,6 +6,7 @@ export interface UserModel extends Document {
     name : string , 
     lastName : string ,
     idUser : string,
+    tlf : number,
     birthday : number,
     email : string,
     password : string ,
@@ -31,6 +32,11 @@ export const userSchema = new Schema({
         require : true,
         unique : true
         },
+    tlf: {
+        type : Number,
+        require : true,
+        unique : true
+        },
     birthday: {
         type : String,
         require : true
@@ -38,14 +44,10 @@ export const userSchema = new Schema({
     email: {
         type : String,
         require : true,
-        minlength: 6,
-        maxlength: 100
         },
     password:{
         type:String,
         require:true,
-        minlength: 2,
-        maxlength: 30
     },
     borradoLogico:{
         type:Boolean,
