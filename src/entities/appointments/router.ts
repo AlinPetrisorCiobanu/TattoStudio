@@ -1,38 +1,38 @@
 import express from "express";
 import {getAll,create,modifyAppoints,deleteAppoints} from "./controler";
-// import { validateToken } from "../../middleware/authorization";
+import { validateToken } from "../../middleware/authorization";
 
 const router = express.Router()
-router.post('/', async (req,res,next)=>{
+router.post('/:idArt', validateToken, async (req,res,next)=>{
     try{
-        res.json(await create(req.body))
+        res.json(await create(req.body , req.user!,req.params.idArt))
     }
     catch(e){
         next(e)
     }
     return create
 })
-router.put('/', async (req,res,next)=>{
+router.put('/', validateToken, async (req,res,next)=>{
     try{
-        res.json(await modifyAppoints(req.body))
+        res.json(await modifyAppoints(req.body , req.user!))
     }
     catch(e){
         next(e)
     }
     return modifyAppoints
 })
-router.delete('/',  async (req,res,next)=>{
+router.delete('/', validateToken,  async (req,res,next)=>{
     try{
-        res.json(await deleteAppoints(req.body))
+        res.json(await deleteAppoints(req.body , req.user!))
     }
     catch(e){
         next(e)
     }
     return deleteAppoints
 })
-router.get('/',  async (_req,res,next)=>{
+router.get('/', validateToken,  async (req,res,next)=>{
     try{
-        res.json(await getAll())
+        res.json(await getAll(req.user!))
     }
     catch(e){
         next(e)

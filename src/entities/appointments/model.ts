@@ -1,38 +1,38 @@
 import {model,Schema,Document} from "../../database";
 export interface AppointsModel extends Document {
-    name : string , 
+    customer: string;
+    artist: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    studio: string;
+    borradoLogico: boolean;
     
 }
 export const appointsSchema = new Schema({
-    name : {
+    customer : {
         type : String,
-        require : true,
-        minlength: 2,
-        maxlength: 15
-        },
-    nameCustomer : {
-        type : String,
-        require : true,
-        minlength: 2,
-        maxlength: 15
+        ref:"Users"
         },  
-    nameArtist : {
+    artist:{
         type : String,
-        require : true,
-        minlength: 2,
-        maxlength: 15
+        ref : "Users"
         },
     date : {
         type : String,
         require : true,
-        minlength: 2,
-        maxlength: 15
+        },
+    startTime : {
+        type : String,
+        require : true,
+        },
+    endTime : {
+        type : String,
+        require : true,
         },
     studio : {
         type : String,
         require : true,
-        minlength: 2,
-        maxlength: 15
         },
     borradoLogico : {
         type : Boolean,
@@ -41,6 +41,6 @@ export const appointsSchema = new Schema({
 },{versionkey:true,timestamps:true});
 
 
-const Appointsment = model<AppointsModel>('Appointsment',appointsSchema);
+const Appoints = model<AppointsModel>('Appointsment',appointsSchema);
 
-export default Appointsment;
+export default Appoints;

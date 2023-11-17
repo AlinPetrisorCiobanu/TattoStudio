@@ -17,8 +17,12 @@ export const signUp = async (user:UserModel) =>{
     if(!validateName(user.name)) return "el nombre no esta bien"
     if(!validateLastName(user.lastName)) return "los apellidos no estan bien"
     if(!validateIdUser(user.idUser)) return "el DNI no esta bien"
+    const idUser = await User.find({idUser: user.idUser})
+    if(idUser[0]) return "lo siento este dni ya existe"
     const number = user.tlf.toString()
     if(!validatePhoneNumber(number)) return "el numero de telefono esta mal"
+    const phoneExist = await User.find({tlf: user.tlf})
+    if(phoneExist[0]) return "lo siento este numero de telefono ya existe"
     const dateNow = new Date()
     if((dateNow.getFullYear()-user.birthday)<18) return "lo siento tienes que ser mayor de edad!"
     const birth = user.birthday.toString()
@@ -26,8 +30,8 @@ export const signUp = async (user:UserModel) =>{
     if(!validateEmail(user.email)) return "el email esta mal"
     if(!validatePassword(user.password)) return "la contraseña esta mal!"
         const newUser = new User(user);
-        const usuarioExistente = await User.find({email:user.email /*, idUser: user.idUser*/})
-        if(usuarioExistente[0]) return "lo siento el usuario ya existe"
+        const userExist = await User.find({email:user.email})
+        if(userExist[0]) return "lo siento el usuario ya existe"
         user.password = await bcrypt.hash(user.password,CONFIDENCE.LOOPDB)
         try{
             if(user.rol==="admin") return "lo siento no puedes elegir admin!"

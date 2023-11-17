@@ -6,7 +6,7 @@ mongoose.connect(`${CONFIDENCE.URLDB}`,{
     // useNewUrlParser: false,
     // useUnifiedTopology: false,
     } as ConnectOptions)
-.then(()=>console.log('servidor arriba'))
+.then(()=>console.log('base de datos'))
 .catch((e)=>console.log('algo ha fallado!' + e))
 
 export = mongoose; 
