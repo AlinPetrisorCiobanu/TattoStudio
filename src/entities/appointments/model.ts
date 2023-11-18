@@ -6,7 +6,7 @@ export interface AppointsModel extends Document {
     startTime: string;
     endTime: string;
     studio: string;
-    borradoLogico: boolean;
+    logicDelete: boolean;
     
 }
 export const appointsSchema = new Schema({
@@ -34,7 +34,7 @@ export const appointsSchema = new Schema({
         type : String,
         require : true,
         },
-    borradoLogico : {
+    logicDelete : {
         type : Boolean,
         default:false,
         }

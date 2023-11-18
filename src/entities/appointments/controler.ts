@@ -3,38 +3,38 @@ import Appoints,{ AppointsModel } from "./model"
 
 
 
-
 //metodo para crear citas
 export const create = async (appoints:AppointsModel , user : JwtPayload , artist :String) =>{
     const dateNow = new Date()
+    const dateStartAppoints = new Date(`${appoints.date} ${appoints.startTime}`)
+        //saco diferentes tipos de datos
+    const weekday = dateStartAppoints.getDay()
+    const hourApp = dateStartAppoints.getHours()
+    const endDate = Number(hourApp) + 1    
+        //reescribo los datos modificados
     appoints.customer = String(user.id) 
     appoints.artist = String(artist)
-    
-    const dateAppoints = new Date(`${appoints.date}T${appoints.startTime}:00`)
-    const weekday = dateAppoints.getDay()
-    const hourApp = dateAppoints.getHours()
-    const endDate = hourApp+1
-    console.log(endDate)
-    //const appExist = await Appoints.find({hour : hourApp})
-    
-    console.log(hourApp)
-    
-    if(dateAppoints<=dateNow) return "no se puede escoger cita para el pasado"
+    appoints.startTime = String(`${hourApp}:00`) 
+    appoints.endTime = String( `${endDate}:00`)
+        //comprobacion de si hay una cita ya creada o si esta borrada!!!
+    const appExist = await Appoints.find({date: appoints.date ,startTime : appoints.startTime , logicDelete : false})
+
+    if(appExist[0])return "lo siento ya hay una cita con este horario!"
+    if(dateStartAppoints<=dateNow) return "no se puede escoger cita para el pasado"
     if(appoints.date > String(dateNow.getFullYear()+1)) return "citas hasta dentro de un maximo 1 año"
-    if((appoints.startTime<'10:00' || appoints.startTime>'13:00') && (appoints.startTime<'15:00'|| appoints.startTime>'17:00')) return "la cita no puede empezar antes del horario 10am-14am-desc-15pm17pm"
-    // if((appoints.endTime<'9:00' || appoints.endTime>'14:00') && (appoints.endTime<'16:00'|| appoints.endTime>'18:00')) return "una cita no puede acabar mas tarde del horario 10am-14am-desc-15pm18pm"
+    if((appoints.startTime<'10:00' || appoints.startTime>'13:00') && (appoints.startTime<'15:00'|| appoints.startTime>'17:00')) return "una cita no puede empezar o acabar fuera del horario establecido 10am-14am-desc-15pm18pm"
     if(weekday===0||weekday===6) return "los fines de semana no se trabaja"
-    
-    //console.log(appoints.startTime)
-    //const appointsExist = Appoints.find({hour : appoints.hour})
+
     const newAppoints = new Appoints(appoints)
+
     try {
-      // await newAppoints.save()
+        await newAppoints.save()
     } catch (err) {
-        {console.log(err + ' error')}
+        {console.log(err)}
     }
     return newAppoints
 }
+
 //metodo para modificar citas
 export const modifyAppoints = async (_appoints:AppointsModel , _user : JwtPayload) =>{
    
