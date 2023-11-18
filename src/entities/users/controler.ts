@@ -79,10 +79,10 @@ export const modifyCustom = async (user:JwtPayload , id:string , datosUsuario : 
     else{
         const userId = await User.findById(user.id)
         if(!userId)return console.log('datos no encontrado')
+        if(!validateName(datosUsuario.name)) return "el nombre esta mal!"
+        if(!validateLastName(datosUsuario.lastName)) return "el apellido esta mal!"
+        if(!validatePassword(datosUsuario.password)) return "la contraseña esta mal!"
         try {
-            if(!validateName(datosUsuario.name)) return "el nombre esta mal!"
-            if(!validateLastName(datosUsuario.lastName)) return "el apellido esta mal!"
-            if(!validatePassword(datosUsuario.password)) return "la contraseña esta mal!"
             const pass = await bcrypt.hash( datosUsuario.password,CONFIDENCE.LOOPDB)
             const updatedUser = await User.findByIdAndUpdate(user.id, { name: datosUsuario.name,
                                                                         lastName: datosUsuario.lastName,

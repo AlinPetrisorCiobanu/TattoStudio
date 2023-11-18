@@ -12,9 +12,9 @@ router.post('/:idArt', validateToken, async (req,res,next)=>{
     }
     return create
 })
-router.put('/', validateToken, async (req,res,next)=>{
+router.put('/:idAppoint', validateToken, async (req,res,next)=>{
     try{
-        res.json(await modifyAppoints(req.body , req.user!))
+        res.json(await modifyAppoints(req.body , req.user! , req.params.idAppoint))
     }
     catch(e){
         next(e)

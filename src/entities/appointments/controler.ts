@@ -5,6 +5,7 @@ import Appoints,{ AppointsModel } from "./model"
 
 //metodo para crear citas
 export const create = async (appoints:AppointsModel , user : JwtPayload , artist :String) =>{
+    if(user.rol==="artist")return "un tatuador no puede crear citas!" 
     const dateNow = new Date()
     const dateStartAppoints = new Date(`${appoints.date} ${appoints.startTime}`)
         //saco diferentes tipos de datos
@@ -36,8 +37,34 @@ export const create = async (appoints:AppointsModel , user : JwtPayload , artist
 }
 
 //metodo para modificar citas
-export const modifyAppoints = async (_appoints:AppointsModel , _user : JwtPayload) =>{
-   
+export const modifyAppoints = async (appoints:AppointsModel , user : JwtPayload , id: String) =>{
+    if(!id)return "debe introducir un id de una cita"
+    const myAppoint = await Appoints.findById(id)
+    if(!myAppoint) return "la cita no existe"
+    
+    try {
+        if(user.rol==="customer"||user.rol==="artist") {
+        const updateAppoint = await Appoints.findByIdAndUpdate(id, {date:appoints.date,
+                                                                    startTime:appoints.startTime
+                                                                   },{new:true})
+        return updateAppoint                                                       
+        }
+    } catch (error) {
+        return error
+    }
+    try {
+        if(user.rol==="admin"){
+            const updateAppoint = await Appoints.findByIdAndUpdate(id, {customer:appoints.customer,
+                                                                        artist:appoints.artist,
+                                                                        date:appoints.date,
+                                                                        startTime:appoints.startTime,
+                                                                       },{new:true})
+            return updateAppoint 
+        }
+    } catch (error) {
+        return error
+    }
+   return
 }
 
 //metodo para borrar citas
