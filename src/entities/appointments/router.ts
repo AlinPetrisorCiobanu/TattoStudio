@@ -21,9 +21,9 @@ router.put('/:idAppoint', validateToken, async (req,res,next)=>{
     }
     return modifyAppoints
 })
-router.delete('/', validateToken,  async (req,res,next)=>{
+router.delete('/:id?', validateToken,  async (req,res,next)=>{
     try{
-        res.json(await deleteAppoints(req.body , req.user!))
+        res.json(await deleteAppoints(req.user!,req.params.id))
     }
     catch(e){
         next(e)
