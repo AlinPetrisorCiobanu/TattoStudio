@@ -129,3 +129,11 @@ export const getAll = async (user:JwtPayload) =>{
             return await User.findById(user.id)
         }
 }
+export const getAllArtist = async (user:JwtPayload) =>{
+        if(user.rol==="admin"){
+           return await User.find({rol:"artist"});
+        }
+        else{
+            return await User.findById(user.id)
+        }
+}

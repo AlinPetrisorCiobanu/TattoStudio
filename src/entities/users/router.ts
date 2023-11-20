@@ -1,5 +1,5 @@
 import express from "express";
-import {signUp,signIn,modifyCustom,deleteCustom,activateCustom,getAll} from "./controler";
+import {signUp,signIn,modifyCustom,deleteCustom,activateCustom,getAll, getAllArtist} from "./controler";
 import { validateToken } from "../../middleware/authorization";
 
 
@@ -58,6 +58,15 @@ router.patch('/:id', validateToken , async (req,res,next)=>{
 router.get('/', validateToken , async (req,res,next)=>{
     try{
         res.json(await getAll(req.user!))
+    }
+    catch(e){
+        next(e)
+    }
+    return getAll
+})
+router.get('/artist', validateToken , async (req,res,next)=>{
+    try{
+        res.json(await getAllArtist(req.user!))
     }
     catch(e){
         next(e)

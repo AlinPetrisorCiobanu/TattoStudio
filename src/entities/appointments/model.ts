@@ -5,7 +5,7 @@ export interface AppointsModel extends Document {
     date: string;
     startTime: string;
     endTime: string;
-    studio: string;
+    intervention: string;
     logicDelete: boolean;
     
 }
@@ -30,9 +30,10 @@ export const appointsSchema = new Schema({
         type : String,
         require : true,
         },
-    studio : {
+    intervention : {
         type : String,
         require : true,
+        default: "tattoo"
         },
     logicDelete : {
         type : Boolean,

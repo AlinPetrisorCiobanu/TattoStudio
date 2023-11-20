@@ -9,7 +9,7 @@
 
 ● Ver todas las citas que tengo como cliente (solo las propias). Validar
 ● Ver todas las citas existentes conmigo (role tatuador). Validar
-● Listar tatuadores (Pending)
+● Listar tatuadores Validar
 
 ● Ver todos los clientes registrados (super admin) (EXTRA) Validar
 ● Crear tatuadores (superadmin) (EXTRA) Validar

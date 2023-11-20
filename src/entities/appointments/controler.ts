@@ -7,6 +7,9 @@ import Appoints,{ AppointsModel } from "./model"
 //metodo para crear citas
 export const create = async (appoints:AppointsModel , user : JwtPayload , artist :String) =>{
     if(user.rol==="artist")return "un tatuador no puede crear citas!" 
+    if(appoints.intervention === "tattoo"||appoints.intervention ==="piercing"){}
+    else{ return "tiene que elegir o tattoo o piercing"}
+    
     const dateNow = new Date()
     const dateStartAppoints = new Date(`${appoints.date} ${appoints.startTime}`)
 
@@ -120,8 +123,12 @@ export const deleteAppoints = async ( user : JwtPayload , idApp:String) =>{
 
 //metodo para imprimir citas
 export const getAll = async (user:JwtPayload) =>{
-    if(user.rol === "customer"||user.rol==="artist"){
+    if(user.rol === "customer"){
         const allAppoints = await Appoints.find({customer:user.id}).populate('customer','name lastName tlf email').populate('artist','name lastName tlf email');
+        return allAppoints 
+    }
+    else if(user.rol==="artist"){
+        const allAppoints = await Appoints.find({artist:user.id}).populate('customer','name lastName tlf email').populate('artist','name lastName tlf email');
         return allAppoints 
     }
     else{
