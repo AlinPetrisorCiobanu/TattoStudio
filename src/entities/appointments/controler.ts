@@ -49,6 +49,8 @@ export const modifyAppoints = async (appoints:AppointsModel , user : JwtPayload 
     if(!id)return "debe introducir un id de una cita"
     const myAppoint = await Appoints.findById(id)
     if(!myAppoint) return "la cita no existe"
+    if(appoints.intervention === "tattoo"||appoints.intervention ==="piercing"){}
+    else{ return "tiene que elegir o tattoo o piercing"}
     
     const dateNow = new Date()
     const dateStartAppoints = new Date(`${appoints.date} ${appoints.startTime}`)
