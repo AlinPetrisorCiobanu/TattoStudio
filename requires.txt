@@ -3,24 +3,20 @@
 ● Perfil de usuario.    Validar
 ● Modificación de datos del perfil. Validar
 
-● Creación de citas.
-● Editar citas.
-● Eliminación de citas
+● Creación de citas. Validar
+● Editar citas. Validar
+● Eliminación de citas Validar
 
-● Ver todas las citas que tengo como cliente (solo las propias).
-● Ver todas las citas existentes conmigo (role tatuador).
-● Listar tatuadores
+● Ver todas las citas que tengo como cliente (solo las propias). Validar
+● Ver todas las citas existentes conmigo (role tatuador). Validar
+● Listar tatuadores (Pending)
 
-● Ver todos los clientes registrados (super admin) (EXTRA)
-● Crear tatuadores (superadmin) (EXTRA)
+● Ver todos los clientes registrados (super admin) (EXTRA) Validar
+● Crear tatuadores (superadmin) (EXTRA) Validar
 ● Eliminar usuario del sistema(super admin ) (EXTRA)
-● Ver una cita en detalle (EXTRA).
-● El super_admin debe otorgar roles a los usuarios del sistema(EXTRA)
-● Validar la fecha de la cita(EXTRA)
-● Añadir tipos de intervención (tattoo / piercing ) a las citas (EXTRA)
+● Ver una cita en detalle (EXTRA). (Pending)
+● El super_admin debe otorgar roles a los usuarios del sistema(EXTRA) Validar
+● Validar la fecha de la cita(EXTRA) (Pending)
+● Añadir tipos de intervención (tattoo / piercing ) a las citas (EXTRA) (Pending)
 
-date.now()
-new date()
-
-min: {new Date()}
 
