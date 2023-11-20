@@ -13,10 +13,10 @@
 
 ● Ver todos los clientes registrados (super admin) (EXTRA) Validar
 ● Crear tatuadores (superadmin) (EXTRA) Validar
-● Eliminar usuario del sistema(super admin ) (EXTRA)
+● Eliminar usuario del sistema(super admin ) (EXTRA) (solo esta implementado el borrado logico)
 ● Ver una cita en detalle (EXTRA). (Pending)
 ● El super_admin debe otorgar roles a los usuarios del sistema(EXTRA) Validar
 ● Validar la fecha de la cita(EXTRA) (Pending)
-● Añadir tipos de intervención (tattoo / piercing ) a las citas (EXTRA) (Pending)
+● Añadir tipos de intervención (tattoo / piercing ) a las citas (EXTRA) Validar
 
 
