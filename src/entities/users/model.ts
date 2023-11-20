@@ -1,5 +1,5 @@
 import CONFIDENCE from "../../config/config";
-import {model,Schema,Document} from "../../database";
+import {model,Schema,Document} from "mongoose";
 import bcrypt from 'bcrypt'
 export interface UserModel extends Document {
     id : any,

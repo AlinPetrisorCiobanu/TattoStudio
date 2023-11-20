@@ -1,9 +1,9 @@
 import express from "express";
 import CONFIDENCE from "./src/config/config";
-import { notFound } from "./src/middleware/middleware";
-import { router as routerUser}  from "./src/entities/users/router";
-import { router as routerAppoints}  from "./src/entities/appointments/router";
-import mongoose from "./src/database";
+import notFound from "./src/middleware/middleware";
+import routerUser from "./src/entities/users/router";
+import routerAppoints from "./src/entities/appointments/router";
+import conexionBBD from "./src/database";
 
 //initalization
 const app = express();
@@ -16,8 +16,10 @@ app.use('/users',routerUser)
 app.use('/appointsment',routerAppoints)
 
 //instancio la base de datos
-mongoose;
+conexionBBD;
 
 //errores://
+// app.use(errorHandler)
 app.use(notFound)
+
 export default app

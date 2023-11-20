@@ -1,5 +1,5 @@
 import express from "express";
-import {getAll,create,modifyAppoints,deleteAppoints} from "./controler";
+import {create,modifyAppoints,deleteAppoints, getAllAppoints} from "./controler";
 import { validateToken } from "../../middleware/authorization";
 
 const router = express.Router()
@@ -10,7 +10,6 @@ router.post('/:idArt', validateToken, async (req,res)=>{
     catch(e){
         res.status(400).json({msg:"error "+e})
     }
-    return create
 })
 router.put('/:idAppoint', validateToken, async (req,res,next)=>{
     try{
@@ -19,7 +18,6 @@ router.put('/:idAppoint', validateToken, async (req,res,next)=>{
     catch(e){
         next(e)
     }
-    return modifyAppoints
 })
 router.delete('/:id', validateToken,  async (req,res,next)=>{
     try{
@@ -28,15 +26,13 @@ router.delete('/:id', validateToken,  async (req,res,next)=>{
     catch(e){
         next(e)
     }
-    return deleteAppoints
 })
 router.get('/', validateToken,  async (req,res,next)=>{
     try{
-        res.json(await getAll(req.user!))
+        res.json(await getAllAppoints(req.user!))
     }
     catch(e){
         next(e)
     }
-    return getAll
 })
-export {router};
+export default router 

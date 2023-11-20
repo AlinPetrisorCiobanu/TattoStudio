@@ -9,10 +9,9 @@ router.post('/',async (req,res,next)=>{
     try{
         res.json(await signUp(req.body))
     }
-    catch(e){
-        next(e)
+    catch(error){
+        next(error)
     }
-    return signUp
 })
 
 router.post('/login', async (req,res,next)=>{
@@ -22,7 +21,6 @@ router.post('/login', async (req,res,next)=>{
     catch(e){
         next(e)
     }
-    return signIn
 })
 
 router.put('/:id?', validateToken ,async (req,res,next)=>{
@@ -32,7 +30,6 @@ router.put('/:id?', validateToken ,async (req,res,next)=>{
     catch(e){
         next(e)
     }
-    return modifyCustom
 })
 
 router.delete('/', validateToken , async (req,res,next)=>{
@@ -42,7 +39,6 @@ router.delete('/', validateToken , async (req,res,next)=>{
     catch(e){
         next(e)
     }
-    return deleteCustom
 })
 
 router.patch('/:id', validateToken , async (req,res,next)=>{
@@ -52,7 +48,6 @@ router.patch('/:id', validateToken , async (req,res,next)=>{
     catch(e){
         next(e)
     }
-    return activateCustom
 })
 
 router.get('/', validateToken , async (req,res,next)=>{
@@ -62,7 +57,6 @@ router.get('/', validateToken , async (req,res,next)=>{
     catch(e){
         next(e)
     }
-    return getAll
 })
 router.get('/artist', validateToken , async (req,res,next)=>{
     try{
@@ -71,7 +65,6 @@ router.get('/artist', validateToken , async (req,res,next)=>{
     catch(e){
         next(e)
     }
-    return getAll
 })
 
-export {router};
+export default router

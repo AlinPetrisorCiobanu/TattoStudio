@@ -19,4 +19,32 @@
 ● Validar la fecha de la cita(EXTRA) (Pending)
 ● Añadir tipos de intervención (tattoo / piercing ) a las citas (EXTRA) Validar
 
+Fallos :
+ al crear usuario se ve la contraseña cuando se devuele
+ reestructurar el codigo
+ validaciones...
+ modificar las partes de errores
+ implementar regex.test
+esconder si el borrado logico
 
+
+const error = new Error("asjdis")
+ (error as any).status = 400
+
+mejor esto ->
+
+ throw new error ("asdsdgh").status(400)
+
+ devolver los datos en formato gson :  
+ (data{
+    name:"",
+    lastName:""
+ })
+
+en el rgex hace falta un test
+
+hacer que las citas vayan independientes dependiendo de hora/fecha y del tatuador
+
+
+el formato next(error) se va y busca el error en el manejador de errores
+el manejador es una funcion con varios parametros

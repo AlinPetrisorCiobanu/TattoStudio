@@ -1,4 +1,4 @@
-import {model,Schema,Document} from "../../database";
+import {model,Schema,Document} from "mongoose";
 export interface AppointsModel extends Document {
     customer: string;
     artist: string;
@@ -38,6 +38,7 @@ export const appointsSchema = new Schema({
     logicDelete : {
         type : Boolean,
         default:false,
+        select : false
         }
 },{versionkey:true,timestamps:true});
 
