@@ -6,8 +6,10 @@ import Appoints, { AppointsModel } from "./model"
 
 //metodo para crear citas
 export const create = async (appoints: AppointsModel, user: JwtPayload, artist: String) => {
-    if (user.rol === "artist") return "un tatuador no puede crear citas!"
-    if (appoints.intervention != "tattoo" && appoints.intervention != "piercing") return "sdf"
+    if (user.rol === "artist") throw new Error("NOT_ALLOWED")
+    if (appoints.intervention.toLowerCase() === "tatuaje") { appoints.intervention === "tattoo"}
+    else if(appoints.intervention.toLowerCase() === "piercing") { appoints.intervention === "piercing" }
+    else { throw new Error("INVALID_CREDENTIALS") }
 
     const dateNow = new Date()
     const dateStartAppoints = new Date(`${appoints.date} ${appoints.startTime}`)
@@ -24,32 +26,39 @@ export const create = async (appoints: AppointsModel, user: JwtPayload, artist: 
     appoints.endTime = String(`${endDate}:00`)
 
     //comprobacion de si hay una cita ya creada o si esta borrada!!!
-    const appExist = await Appoints.findOne({ date: appoints.date, startTime: appoints.startTime, logicDelete: false })
+    const appExist = await Appoints.findOne(
+        {
+            date: appoints.date,
+            startTime: appoints.startTime,
+            artist: appoints.artist,
+            logicDelete: false,
+        }
+    )
+    if (appExist != null) throw new Error("ALLREADY_EXIST")
+    if (dateStartAppoints <= dateNow) throw new Error("BAD_DATE_REQUEST")
 
-    if (appExist) return "lo siento ya hay una cita con este horario!"
-    if (dateStartAppoints <= dateNow) return "no se puede escoger cita para el pasado"
-
-    if (appoints.date > `${new Date().getFullYear() + 1}${new Date().getMonth()}`) return "citas hasta dentro de un maximo 1 año"
-    if ((appoints.startTime < '10:00' || appoints.startTime > '13:00') && (appoints.startTime < '15:00' || appoints.startTime > '17:00')) return "una cita no puede empezar o acabar fuera del horario establecido 10am-14am-desc-15pm18pm"
-    if (weekday === 0 || weekday === 6) return "los fines de semana no se trabaja"
+    if (appoints.date > `${new Date().getFullYear() + 1}${new Date().getMonth()}`) throw new Error("BAD_DATE_REQUEST")
+    if ((appoints.startTime < '10:00' || appoints.startTime > '13:00') && (appoints.startTime < '15:00' || appoints.startTime > '17:00')) throw new Error("BAD_DATE_REQUEST")
+    if (weekday === 0 || weekday === 6) throw new Error("BAD_DATE_REQUEST")
 
     const newAppoints = new Appoints(appoints)
 
     try {
         await newAppoints.save()
-    } catch (err) {
-        { console.log(err) }
+        return ("Cita Creada Con Exito")
+    } catch {
+        throw new Error("BAD_REQUEST")
     }
-    return newAppoints
 }
 
 //metodo para modificar citas
 export const modifyAppoints = async (appoints: AppointsModel, user: JwtPayload, id: String) => {
-    if (!id) return "debe introducir un id de una cita"
+    if (!id) throw new Error("INVALID_CREDENTIALS")
     const myAppoint = await Appoints.findById(id)
-    if (!myAppoint) return "la cita no existe"
-    if (appoints.intervention === "tattoo" || appoints.intervention === "piercing") { }
-    else { return "tiene que elegir o tattoo o piercing" }
+    if (!myAppoint) throw new Error("ALLREADY_NOT_EXIST")
+    if (appoints.intervention.toLowerCase() === "tatuaje") { appoints.intervention === "tattoo"}
+    else if(appoints.intervention.toLowerCase() === "piercing") { appoints.intervention === "piercing" }
+    else { throw new Error("INVALID_CREDENTIALS") }
 
     const dateNow = new Date()
     const dateStartAppoints = new Date(`${appoints.date} ${appoints.startTime}`)
@@ -66,28 +75,27 @@ export const modifyAppoints = async (appoints: AppointsModel, user: JwtPayload, 
     //comprobacion de si hay una cita existente o si esta borrada!!!
     const appExist = await Appoints.findOne({ date: appoints.date, startTime: appoints.startTime, logicDelete: false })
 
-    if (appExist) return "lo siento ya hay una cita con este horario!"
-    if (dateStartAppoints <= dateNow) return "no se puede escoger cita para el pasado"
-    if (appoints.date > `${new Date().getFullYear() + 1}${new Date().getMonth()}`) return "citas hasta dentro de un maximo 1 año"
-    if ((appoints.startTime < '10:00' || appoints.startTime > '13:00') && (appoints.startTime < '15:00' || appoints.startTime > '17:00')) return "una cita no puede empezar o acabar fuera del horario establecido 10am-14am-desc-15pm18pm"
-    if (weekday === 0 || weekday === 6) return "los fines de semana no se trabaja"
-
-    try {
-        if (user.rol === "customer" || user.rol === "artist") {
-            const updateAppoint = await Appoints.findByIdAndUpdate(id,
+    if (appExist) throw new Error("ALLREADY_EXIST")
+    if (dateStartAppoints <= dateNow) throw new Error("BAD_DATE_REQUEST")
+    if (appoints.date > `${new Date().getFullYear() + 1}${new Date().getMonth()}`) throw new Error("BAD_DATE_REQUEST")
+    if ((appoints.startTime < '10:00' || appoints.startTime > '13:00') && (appoints.startTime < '15:00' || appoints.startTime > '17:00')) throw new Error("BAD_DATE_REQUEST")
+    if (weekday === 0 || weekday === 6) throw new Error("BAD_DATE_REQUEST")
+    if (user.rol === "customer" || user.rol === "artist") {
+        try {
+            await Appoints.findByIdAndUpdate(id,
                 {
                     date: appoints.date,
                     startTime: appoints.startTime,
                     endTime: appoints.endTime
                 }, { new: true })
-            return updateAppoint
+             return ("cita actualizada")
+        } catch {
+            throw new Error("BAD_REQUEST")
         }
-    } catch (error) {
-        return error
     }
-    try {
-        if (user.rol === "admin") {
-            const updateAppoint = await Appoints.findByIdAndUpdate(id,
+    else if (user.rol === "admin") {
+        try {
+            await Appoints.findByIdAndUpdate(id,
                 {
                     customer: appoints.customer,
                     artist: appoints.artist,
@@ -95,12 +103,13 @@ export const modifyAppoints = async (appoints: AppointsModel, user: JwtPayload, 
                     startTime: appoints.startTime,
                     endTime: appoints.endTime
                 }, { new: true })
-            return updateAppoint
+             return ("cita actualizada")
+        } catch {
+            throw new Error("BAD_REQUEST")
         }
-    } catch (error) {
-        return error
+
     }
-    return
+    return ("")
 }
 
 //metodo para borrar citas
@@ -108,7 +117,7 @@ export const deleteAppoints = async (user: JwtPayload, idApp: String) => {
 
     if (user.rol === "artist" || user.rol === "customer") {
         const userAppoints = await Appoints.findOne({ _id: idApp, customer: user.id, logicDelete: false })
-        if (!userAppoints) return "el usuario no tiene citas"
+        if (!userAppoints) throw new Error("ALLREADY_NOT_EXIST")
         try {
             const deleteApp = await Appoints.findByIdAndUpdate(idApp, { logicDelete: true }, { new: true });
             return deleteApp
@@ -118,7 +127,7 @@ export const deleteAppoints = async (user: JwtPayload, idApp: String) => {
     }
     else {
         const userAppoints = await Appoints.findOne({ _id: idApp, logicDelete: false })
-        if (!userAppoints) return "no se ha encontrado la citas"
+        if (!userAppoints) throw new Error("ALLREADY_NOT_EXIST")
         try {
             const deleteApp = await Appoints.findByIdAndUpdate(idApp, { logicDelete: true }, { new: true });
             return deleteApp

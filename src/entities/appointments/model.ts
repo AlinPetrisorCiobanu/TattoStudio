@@ -38,7 +38,6 @@ export const appointsSchema = new Schema({
     logicDelete : {
         type : Boolean,
         default:false,
-        select : false
         }
 },{versionkey:true,timestamps:true});
 

@@ -7,16 +7,16 @@ const router = express.Router()
 
 router.post('/',async (req,res,next)=>{
     try{
-        res.json(await signUp(req.body))
+        res.status(201).json(await signUp(req.body))
     }
-    catch(error){
-        next(error)
+    catch(e){
+        next(e)
     }
 })
 
 router.post('/login', async (req,res,next)=>{
     try{
-        res.json(await signIn(req.body))
+        res.status(200).json(await signIn(req.body))
     }
     catch(e){
         next(e)
@@ -25,34 +25,34 @@ router.post('/login', async (req,res,next)=>{
 
 router.put('/:id?', validateToken ,async (req,res,next)=>{
     try{
-        res.json(await modifyCustom(req.user! , req.params.id , req.body))
+        res.status(200).json(await modifyCustom(req.user! , req.params.id , req.body))
     }
     catch(e){
         next(e)
     }
 })
 
-router.delete('/', validateToken , async (req,res,next)=>{
+router.delete('/:id?', validateToken , async (req,res,next)=>{
     try{
-        res.json(await deleteCustom(req.user!))
+        res.status(200).json(await deleteCustom(req.user!, req.params.id))
     }
     catch(e){
         next(e)
     }
 })
-
 router.patch('/:id', validateToken , async (req,res,next)=>{
     try{
-        res.json(await activateCustom(req.user! , req.params.id))
+        res.status(200).json(await activateCustom(req.user!, req.params.id , req.body))
     }
     catch(e){
         next(e)
     }
 })
+
 
 router.get('/', validateToken , async (req,res,next)=>{
     try{
-        res.json(await getAll(req.user!))
+        res.status(200).json(await getAll(req.user!))
     }
     catch(e){
         next(e)
@@ -60,7 +60,7 @@ router.get('/', validateToken , async (req,res,next)=>{
 })
 router.get('/artist', validateToken , async (req,res,next)=>{
     try{
-        res.json(await getAllArtist(req.user!))
+        res.status(200).json(await getAllArtist(req.user!))
     }
     catch(e){
         next(e)

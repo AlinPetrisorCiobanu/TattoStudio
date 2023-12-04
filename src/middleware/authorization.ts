@@ -5,8 +5,9 @@ import { JwtPayload } from "../types/types";
 
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.header("Authorization");
+    const token = req.header("Authorization")
     if (!token) {
+      console.log(token)
       return res.status(401).json({ msg: 'UNAUTHORIZED' });
     }
     const t = token.split(" ")[1];

@@ -1,9 +1,11 @@
 import express from "express";
 import CONFIDENCE from "./src/config/config";
-import notFound from "./src/middleware/middleware";
 import routerUser from "./src/entities/users/router";
 import routerAppoints from "./src/entities/appointments/router";
 import conexionBBD from "./src/database";
+import cors from "cors";
+import { errorHandler } from "./src/middleware/middleware";
+
 
 //initalization
 const app = express();
@@ -12,6 +14,7 @@ app.listen(CONFIDENCE.PORTDB);
 //middlewares
 app.use(express.urlencoded({extended: false}))
 app.use(express.json());
+app.use(cors())
 app.use('/users',routerUser)
 app.use('/appointsment',routerAppoints)
 
@@ -19,7 +22,6 @@ app.use('/appointsment',routerAppoints)
 conexionBBD;
 
 //errores://
-// app.use(errorHandler)
-app.use(notFound)
+app.use(errorHandler)
 
 export default app

@@ -3,12 +3,12 @@ import {create,modifyAppoints,deleteAppoints, getAllAppoints} from "./controler"
 import { validateToken } from "../../middleware/authorization";
 
 const router = express.Router()
-router.post('/:idArt', validateToken, async (req,res)=>{
+router.post('/:idArt', validateToken, async (req,res,next)=>{
     try{
-        res.json(await create(req.body , req.user!,req.params.idArt))
+        res.json(await create(req.body , req.user!, req.params.idArt))
     }
     catch(e){
-        res.status(400).json({msg:"error "+e})
+        next(e)
     }
 })
 router.put('/:idAppoint', validateToken, async (req,res,next)=>{
